@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .nav {
+            border: 1px solid black;
+            width: 100vw;
+        }
+
+        .content {
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Welcome! {{ this_user.first_name }}</h1>
+        <a href="/logout">Logout</a>
+        <a href="/wishes/stats">View stats</a>
+        <a href="/wishes/new">Make a wish!</a>
+    </div>
+    <hr />
+    <div class="content">
+        <h3>Your wish list</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Date_added</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for wish in user_wishes %}
+                {% if wish.granted == False %}
+                <tr>
+                    <td>{{ wish.item }}</td>
+                    <td>{{ wish.created_at | date:"F d Y" }}</td>
+                    <td>
+                        <a href="/wishes/remove/{{ wish.id }}">Remove</a> |
+                        <a href="/wishes/edit/{{ wish.id }}">Edit</a> |
+                        <a href="/wishes/granted/{{ wish.id}}">Granted!</a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <hr />
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Wisher</th>
+                    <th>Date_added</th>
+                    <th>Date_Granted</th>
+                    <th>Likes</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for wish in granted_wishes %}
+                <tr>
+                    <td>{{ wish.item }}</td>
+                    <td>{{ wish.user.first_name }}</td>
+                    <td>{{ wish.created_at | date:"F d Y" }}</td>
+                    <td>{{ wish.updated_at | date:"F d Y" }}</td>
+                    <td>{{ wish.like }}</td>
+                    <td>
+                        {% if wish.user != this_user %}
+                        <a href="/wishes/like/{{ wish.id }}">Like</a>
+                        {% else %}
+                        <a href="/wishes"></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

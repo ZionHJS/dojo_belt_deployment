@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>The Wishing app</title>
+    <style>
+        .nav {
+            border: 1px solid black;
+            width: 100vw;
+        }
+
+        .content {
+            width: 100vw;
+            position: relative;
+        }
+
+        .btn {
+            position: absolute;
+            left: 140px;
+            top: 120px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Hello {{ this_user.first_name }}! Make a wish!</h1>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="content">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <form action="/wishes/new/verify" method="post">
+            {% csrf_token %}
+            <h4>I wish for:</h4>
+            <input type="text" name="item">
+            <h4>Description:</h4>
+            <input type="text" name="description">
+            &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+            <input type="submit" value="Submit" name="Submit">
+        </form>
+        <input class="btn" type="button" value="Cancel" onclick="location.href='/wishes'">
+    </div>
+</body>
+
+</html>
