@@ -1,0 +1,26 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/{{dojo_belt_deployment}}
+ExecStart=/home/ubuntu/{{dojo_belt_deployment}}/env/bin/gunicorn --workers 3 --bind unix:/home/ubuntu/{{dojo_belt_deployment}}/{{dojo_belt_proj}}.sock {{dojo_belt_proj}}.wsgi:application
+[Install]
+WantedBy=multi-user.target
+
+
+server {
+  listen 80;
+  server_name {{ec2-13-52-78-88.us-west-1.compute.amazonaws.com
+}};
+  location = /favicon.ico { access_log off; log_not_found off; }
+  location /static/ {
+      root /home/ubuntu/{{dojo_belt_deployment}};
+  }
+  location / {
+      include proxy_params;
+      proxy_pass http://unix:/home/ubuntu/{{dojo_belt_deployment}}/{{dojo_belt_proj}}.sock;
+  }
+}
+
